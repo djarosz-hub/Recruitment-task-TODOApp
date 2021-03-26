@@ -40,6 +40,10 @@ function App() {
       });
   };
   const loginUser = () => {
+    if (login === "" || password === "") {
+      console.log("empty");
+      return;
+    }
     Axios.post("http://localhost:3001/login", {
       login: login,
       password: password,
@@ -55,7 +59,32 @@ function App() {
       setId(res.data[0].id);
     });
   };
-
+  const getAllNotes = () => {
+    Axios.get("http://localhost:3001/notes", {
+      params:{
+        login:loggedId
+      }
+    }).then((res)=>{
+      if(res.message){
+        console.log(res.message.data)
+        return;
+      }
+      console.log(res.data);
+    });
+  };
+  const getNote = (noteId)=>{
+    Axios.get(`http://localhost:3001/notes/${noteId}`, {
+      params:{
+        id:noteId
+      }
+    }).then((res)=>{
+      if(res.message){
+        console.log(res.message.data)
+        return;
+      }
+      console.log(res.data);
+    });
+  }
   return (
     <div className="App">
       <div>
@@ -97,6 +126,8 @@ function App() {
           <button onClick={loginUser}> login</button>
         </div>
       </div>
+      <button onClick={()=>getAllNotes()}>pobierz notki</button>
+      <button onClick={()=>getNote(4)}>notke</button>
     </div>
   );
 }

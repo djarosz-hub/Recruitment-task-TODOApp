@@ -10,9 +10,10 @@ CREATE TABLE `tododb`.`notes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(100) NOT NULL,
   `body` VARCHAR(2000) NOT NULL,
+  `owner` INT NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `owner`
-    FOREIGN KEY (`id`)
+  CONSTRAINT `noteOwner`
+    FOREIGN KEY (`owner`)
     REFERENCES `tododb`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);

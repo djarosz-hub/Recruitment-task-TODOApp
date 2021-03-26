@@ -5,6 +5,7 @@ const { dbConfig } = require("../config");
 
 const db = mysql.createConnection(dbConfig);
 
+//authorize section
 router.post("/register", (req, res) => {
   const login = req.body.login;
   const password = req.body.password;
@@ -29,7 +30,6 @@ router.post("/register", (req, res) => {
     );
   });
 });
-
 router.post("/login", (req, res) => {
   const login = req.body.login;
   const password = req.body.password;
@@ -51,4 +51,45 @@ router.post("/login", (req, res) => {
   );
 });
 
+//utils section
+router.get("/notes",(req,res)=>{
+  const login = req.query.login;
+    db.query(
+        "SELECT * FROM notes WHERE owner = ?", [login],(err,result)=>{
+            if(err){
+                res.send({message:"something went wrong"});
+                return;
+            }
+            if(result.length == 0){
+                res.send({message:"no notes yet"});
+                return;
+            }
+            res.send(result);
+        }
+    );
+});
+router.get("/notes/:id",(req,res)=>{
+    const noteId = req.query.id;
+    db.query(
+        "SELECT * FROM notes WHERE id = ?", [noteId],(err,result)=>{
+            if(err){
+                res.send({message:"something went wrong"});
+                return;
+            }
+            res.send(result);
+        }
+    );
+});
+router.post("/notes",(req,res)=>{
+    const login = req.body.login;
+
+});
+router.put("/notes",(req,res)=>{
+    const login = req.body.login;
+
+});
+router.delete("/notes",(req,res)=>{
+    const login = req.body.login;
+
+});
 module.exports = router;
