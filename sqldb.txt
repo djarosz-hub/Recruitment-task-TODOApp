@@ -16,3 +16,6 @@ CREATE TABLE `tododb`.`notes` (
     REFERENCES `tododb`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'
+/*mysql uses 8.0+ sh2password which is not supported by node yet*/
