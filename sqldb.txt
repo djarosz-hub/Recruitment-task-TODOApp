@@ -1,0 +1,18 @@
+CREATE SCHEMA `tododb` ;
+CREATE TABLE `tododb`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(30) NOT NULL,
+  `password` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE);
+CREATE TABLE `tododb`.`notes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NOT NULL,
+  `body` VARCHAR(2000) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `owner`
+    FOREIGN KEY (`id`)
+    REFERENCES `tododb`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
