@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import "./App.css";
+import Todo from "./components/Todo";
+import {Reset} from 'styled-reset';
 
 function App() {
   const [loginRegister, setLoginRegister] = useState("");
@@ -218,6 +220,8 @@ function App() {
         <input placeholder="body" id="trescedit"></input>
         <button onClick={() => editNoteValues(9)}>edytuj notke</button>
       </div>
+      <Reset/>
+      <Todo/>
     </div>
   );
 }
