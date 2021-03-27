@@ -24,7 +24,6 @@ function NewNote(props) {
   };
   const addNote = () => {
     const note = {
-        id:'dsd',
       title: title,
       body: body
     };

@@ -4,32 +4,42 @@ import Note from "./Note";
 import NewNote from "./NewNote";
 import Modal from "react-modal";
 import EditNote from "./EditNote";
-
+import Axios from "axios";
+function emptyCredentialsAlert() {
+    alert("Username or password can't be empty!");
+}
+function emptyNoteAlert() {
+    alert("Note title or note body can't be empty!");
+}
 class Todo extends React.Component {
     state = {
-        notes: [
-            {
-                id: "123",
-                title: "pierwsza",
-                body: "notka1"
-            },
-            {
-                id: "234",
-                title: "druga",
-                body: "notka2"
-            }
-        ],
+        notes: [],
         showEditModal: false,
-        editNote:{}
+        editNote: {}
     };
     deleteNote(id) {
         console.log(id);
         const notes = [...this.state.notes].filter(note => note.id !== id);
         this.setState({ notes });
     };
-    addNote(note) {
+    async addNote(note) {
+        if (note.title === "" || note.body === "") {
+            return emptyNoteAlert();
+        }
         const notes = [...this.state.notes];
-        notes.push(note);
+        //todo edit
+        const res = await Axios.post("http://localhost:3001/notes", {
+            title: note.title,
+            body: note.body,
+            // owner: loggedId,
+            owner:1
+          });
+          if(res.data.error){
+              return console.log(`error adding note: ${res.data.error}`)
+            }
+        const newNoteId = res.data.insertId;
+        //
+        notes.push({id: newNoteId, title: note.title, body: note.body });
         this.setState({ notes });
     }
     editNote(note) {
@@ -46,8 +56,29 @@ class Todo extends React.Component {
     }
     editNoteHandler(note) {
         this.toggleModal();
-        this.setState({editNote:note})
+        this.setState({ editNote: note })
     }
+    // todo
+    componentDidMount() {
+        this.getNotesFromApi();
+    }
+    //
+    getNotesFromApi() {
+        Axios.get("http://localhost:3001/notes", {
+            params: {
+                //todo login: loggedId,
+                login: 1
+            },
+        }).then((res) => {
+            if (res.message) {
+                console.log(res.message.data);
+                return;
+            }
+            this.setState({ notes: res.data })
+            console.log(res.data);
+        });
+    };
+
     render() {
         return (
             <>
@@ -57,11 +88,11 @@ class Todo extends React.Component {
                     isOpen={this.state.showEditModal}
                     contentLabel="Edytuj notatkę"
                     ariaHideApp={false}>
-                    <EditNote onEdit={(note) => this.editNote(note)} 
-                    title={this.state.editNote.title}
-                    body={this.state.editNote.body}
-                    id={this.state.editNote.id}/>
-                    <button onClick={()=>this.toggleModal()}>Anuluj</button>
+                    <EditNote onEdit={(note) => this.editNote(note)}
+                        title={this.state.editNote.title}
+                        body={this.state.editNote.body}
+                        id={this.state.editNote.id} />
+                    <button onClick={() => this.toggleModal()}>Anuluj</button>
                 </Modal>
                 {this.state.notes.map((note) => (
                     <Note key={note.id}

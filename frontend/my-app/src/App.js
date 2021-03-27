@@ -110,7 +110,11 @@ function App() {
         owner: loggedId,
       })
         .then((res) => {
-          console.log(res.data.message);
+          // console.log(res.data.message);
+          console.log(res.data.title);
+          console.log(res.data.body);
+          console.log(res.data.insertId);
+          console.log(res)
         })
         .catch((err) => {
           console.log(`note adding failed`);

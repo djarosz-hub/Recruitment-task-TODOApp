@@ -102,7 +102,14 @@ router.post("/notes", (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        return res.status(201).json({ message: "Successfully created note!" });
+        // const addedNote = {
+        //   id:result.data.insrtedId,
+        //   title: result.config
+        // }
+        // const x = JSON.parse(JSON.stringify(result));
+        // console.log(x)
+        return res.status(201).json(result);
+        // return res.status(201).json({ message: "Successfully created note!" });
       }
     );
   } catch (err) {
