@@ -9,6 +9,10 @@ export const Button = styled.button`
     width:fit-content;
     height:35px;
     color:white;
+    border-radius:5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style: italic;
+    font-weight:550;
 `;
 export const EditButton = styled(Button)`
     background-color:blue;

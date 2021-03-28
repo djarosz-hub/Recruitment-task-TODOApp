@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Register from "./Register";
 import Login from "./Login";
 import Note from "./Note";
@@ -7,6 +6,7 @@ import NewNote from "./NewNote";
 import Modal from "react-modal";
 import EditNote from "./EditNote";
 import Axios from "axios";
+import {Wrapper,LogoutButton} from "./styledElements/MainTodoStyledElements";
 
 export function emptyCredentialsAlert() {
     alert("Username or password can't be empty!");
@@ -25,7 +25,6 @@ class Todo extends React.Component {
     };
 
     deleteNote(id) {
-        console.log(id);
         const notes = [...this.state.notes].filter(note => note.id !== id);
         try {
             Axios.delete(`${baseUrl}/notes/${id}`, {
@@ -76,19 +75,20 @@ class Todo extends React.Component {
                 title: note.title,
                 body: note.body,
             }).then((res) => {
-                if (res.status === 204) console.log("successfully updated note");
+                if (res.status === 204) {
+                    console.log("successfully updated note");
+                    const notes = [...this.state.notes];
+                    const index = notes.findIndex(item => item.id === note.id);
+                    if (index >= 0) {
+                        notes[index] = note;
+                        this.setState({ notes });
+                    }
+                }
             }).catch((error) => {
                 console.log(error);
             })
         } catch (error) {
             console.log(`error updating data: ${error}`);
-        }
-
-        const notes = [...this.state.notes];
-        const index = notes.findIndex(item => item.id === note.id);
-        if (index >= 0) {
-            notes[index] = note;
-            this.setState({ notes });
         }
         this.toggleModal();
     }
@@ -126,11 +126,19 @@ class Todo extends React.Component {
             this.getNotesFromApi();
         })
     }
+    logoutUser = () => {
+        this.setState({
+            loggedId: null,
+            notes: [],
+        })
+    }
     render() {
         return (
-            <>
-                <Login
-                    setLoggedId={(id) => this.onLogin(id)} />
+            <Wrapper>
+                <Login setLoggedId={(id) => this.onLogin(id)}>
+
+                </Login>
+                <LogoutButton onClick={this.logoutUser}>Wyloguj</LogoutButton>
                 <Register />
                 <NewNote
                     onAdd={(note) => this.addNote(note)} />
@@ -145,15 +153,17 @@ class Todo extends React.Component {
                     />
                     <button onClick={() => this.toggleModal()}>Anuluj</button>
                 </Modal>
-                {this.state.notes.map((note) => (
-                    <Note key={note.id}
-                        title={note.title}
-                        body={note.body}
-                        id={note.id}
-                        onDelete={(id) => this.deleteNote(id)}
-                        onEdit={(note) => this.editNoteHandler(note)} />
-                ))}
-            </>
+                <div>
+                    {this.state.notes.map((note) => (
+                        <Note key={note.id}
+                            title={note.title}
+                            body={note.body}
+                            id={note.id}
+                            onDelete={(id) => this.deleteNote(id)}
+                            onEdit={(note) => this.editNoteHandler(note)} />
+                    ))}
+                </div>
+            </Wrapper>
         );
     }
 }

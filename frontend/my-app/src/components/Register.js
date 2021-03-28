@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Wrapper, Input, Label, RegButton, Header } from "./CommonStyledElements";
+import { Wrapper, Input, Label, RegButton, Header } from "./styledElements/CommonStyledElements";
 import { emptyCredentialsAlert, baseUrl } from "./Todo";
 import Axios from "axios";
 

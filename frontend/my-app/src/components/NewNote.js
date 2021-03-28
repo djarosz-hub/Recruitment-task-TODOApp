@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {Button, AddButton}from "./CommonStyledElements";
+import {Button, AddButton}from "./styledElements/CommonStyledElements";
 
 export const Wrapper = styled.div``;
 export const Label = styled.label``;
@@ -36,10 +36,10 @@ function NewNote(props) {
       showAddForm ? (
     <Wrapper>
       <Label>Tytuł notatki:</Label>
-      <Input type="text" value={title} onChange={changeTitleHandler} />
+      <Input type="text" value={title} onChange={changeTitleHandler} maxLength="100"/>
 
       <Label>Treść:</Label>
-      <Input type="text" value={body} onChange={changeBodyHandler} />
+      <Input type="text" value={body} onChange={changeBodyHandler} maxLength="2000"/>
       <AddButton onClick={() => addNote()}>Dodaj notatkę</AddButton>
     </Wrapper>
       ) : (
