@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {DeleteButton, EditButton} from "./CommonStyledElements";
 
 const Wrapper = styled.div`
     max-width:250px;
@@ -13,15 +14,7 @@ const Body = styled.div`
 const Title = styled.p`
 
 `;
-const NoteBtn = styled.button`
-    width:fit-content;
-    height:35px;
-    color:white;
-    background-color:blue;
-`;
-const DelNoteBtn = styled(NoteBtn)`
-    background-color:red;
-`;
+
 function Note(props) {
 
     const editHandler = () => {
@@ -35,10 +28,9 @@ function Note(props) {
         <Wrapper>
             <Title>{props.title}</Title>
             <Body>{props.body}</Body>
-            <NoteBtn onClick={editHandler}>Edytuj notatkę</NoteBtn>
-            <DelNoteBtn onClick={() => props.onDelete(props.id)}>Usuń notatkę</DelNoteBtn>
+            <EditButton onClick={editHandler}>Edytuj notatkę</EditButton>
+            <DeleteButton onClick={() => props.onDelete(props.id)}>Usuń notatkę</DeleteButton>
         </Wrapper >
     );
 }
 export default Note;
-export { NoteBtn };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Label, Input} from "./NewNote";
 import styled from "styled-components";
-import {NoteBtn} from "./Note";
+import {EditButton} from "./CommonStyledElements";
 
 const Wrapper = styled.div`
     width:200px;
@@ -36,7 +36,7 @@ function EditNote(props) {
 
             <Label>Treść:</Label>
             <Input type="text" value={body} onChange={changeBodyHandler} />
-            <NoteBtn onClick={() => editNote()}>Edytuj notatkę</NoteBtn>
+            <EditButton onClick={() => editNote()}>Edytuj notatkę</EditButton>
         </Wrapper>
 
     );

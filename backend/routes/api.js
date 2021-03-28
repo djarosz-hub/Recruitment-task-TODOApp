@@ -14,7 +14,7 @@ router.post("/register", (req, res) => {
         return res.status(400).json({ error: err });
       }
       if (result.length > 0) {
-        return res.status(200).json({ message: "User already exists!" });
+        return res.status(200).json({ error: "User already exists!" });
       }
       db.query(
         "INSERT INTO users (login,password) VALUES (?,?)",
@@ -23,7 +23,7 @@ router.post("/register", (req, res) => {
           if (err) {
             return res.status(400).json({ error: err });
           }
-          return res.status(201).json({ message: "Successfully created user" });
+          return res.status(201).json(result);
         }
       );
     });
@@ -60,6 +60,7 @@ router.post("/login", (req, res) => {
 //utils section
 router.get("/notes", (req, res) => {
   const login = req.query.login;
+  console.log(login)
   try {
     db.query("SELECT * FROM notes WHERE owner = ?", [login], (err, result) => {
       if (err) {
@@ -68,6 +69,7 @@ router.get("/notes", (req, res) => {
       if (result.length == 0) {
         return res.status(200).json({ message: "no notes yet" });
       }
+      console.log(result);
       res.send(result);
     });
   } catch (err) {
@@ -91,7 +93,6 @@ router.get("/notes/:id", (req, res) => {
     return res.status(400).json({ error: err });
   }
 });
-
 router.post("/notes", (req, res) => {
   const { title, body, owner } = req.body;
   try {
@@ -102,14 +103,9 @@ router.post("/notes", (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        // const addedNote = {
-        //   id:result.data.insrtedId,
-        //   title: result.config
-        // }
-        // const x = JSON.parse(JSON.stringify(result));
-        // console.log(x)
+        //todo
+
         return res.status(201).json(result);
-        // return res.status(201).json({ message: "Successfully created note!" });
       }
     );
   } catch (err) {
@@ -118,24 +114,24 @@ router.post("/notes", (req, res) => {
 });
 router.put("/notes/:id", async (req, res) => {
   const { login, id, title, body } = req.body;
-  console.log(login)
-  console.log(id)
-  console.log(title)
-  console.log(body)
-  try{
+  console.log(login);
+  console.log(id);
+  console.log(title);
+  console.log(body);
+  try {
     db.query(
-    "UPDATE notes SET title = ?, body = ? WHERE id = ? AND owner = ?",
-    [title,body,id,login],
-    (err, result, fields) => {
-      if (err) {
-        return res.status(400).json({ error: err });
+      "UPDATE notes SET title = ?, body = ? WHERE id = ? AND owner = ?",
+      [title, body, id, login],
+      (err, result, fields) => {
+        if (err) {
+          return res.status(400).json({ error: err });
+        }
+        console.log("note updated");
+        return res.status(204).json(result);
       }
-      console.log('note updated');
-      return res.status(204).json(result);
-    }
     );
-  }catch(err){
-    return res.status(400).json({error:err});
+  } catch (err) {
+    return res.status(400).json({ error: err });
   }
 });
 router.delete("/notes/:id", (req, res) => {
@@ -148,8 +144,8 @@ router.delete("/notes/:id", (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        console.log('note deleted');
-        return res.status(204).json({message: "successfully deleted"});
+        console.log("note deleted");
+        return res.status(204).json({ message: "successfully deleted" });
       }
     );
   } catch (err) {

@@ -173,60 +173,10 @@ function App() {
     editNote(noteId, title, val);
   }
   return (
-    <div className="App">
-      <div>
-        <h1>register</h1>
-        <div>
-          <label>username</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setLoginRegister(e.target.value);
-            }}
-          />
-          <label>pass</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setPasswordRegister(e.target.value);
-            }}
-          />
-          <button onClick={registerUser}> register</button>
-        </div>
-
-        <h1>login</h1>
-        <div>
-          <label>username</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setLogin(e.target.value);
-            }}
-          />
-          <label>pass</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <button onClick={loginUser}> login</button>
-        </div>
-      </div>
-      <button onClick={() => getAllNotes()}>pobierz wszystkie notki</button>
-      <button onClick={() => getNote(5)}>pobierz 1 notke</button>
-      <input placeholder="tytul" id="tytul"></input>
-      <input placeholder="body" id="tresc"></input>
-      <button onClick={() => takeNoteValues()}>dodaj notke</button>
-      <button onClick={() => deleteNote(14)}>usun notatke</button>
-      <div>
-        <input placeholder="tytul" id="tytuledit"></input>
-        <input placeholder="body" id="trescedit"></input>
-        <button onClick={() => editNoteValues(9)}>edytuj notke</button>
-      </div>
+    <>
       <Reset/>
       <Todo/>
-    </div>
+    </>
   );
 }
 

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Note, { NoteBtn } from "./Note";
+import {Button, AddButton}from "./CommonStyledElements";
 
 export const Wrapper = styled.div``;
 export const Label = styled.label``;
 export const Input = styled.input``;
-export const ShowFormBtn = styled(NoteBtn)`
+export const ShowFormBtn = styled(Button)`
     background-color:green;
 `;
 function NewNote(props) {
@@ -40,7 +40,7 @@ function NewNote(props) {
 
       <Label>Treść:</Label>
       <Input type="text" value={body} onChange={changeBodyHandler} />
-      <NoteBtn onClick={() => addNote()}>Dodaj notatkę</NoteBtn>
+      <AddButton onClick={() => addNote()}>Dodaj notatkę</AddButton>
     </Wrapper>
       ) : (
         <ShowFormBtn onClick={()=>setShowAddForm(true)}>Dodaj notatkę</ShowFormBtn>
