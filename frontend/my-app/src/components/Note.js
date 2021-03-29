@@ -1,5 +1,5 @@
 import React from "react";
-import {Wrapper,Title,Body,BtnWrapper} from "./styledElements/NoteStyledElements";
+import { Wrapper, Title, Body, BtnWrapper } from "./styledElements/NoteStyledElements";
 import { DeleteButton, EditButton } from "./styledElements/CommonStyledElements";
 
 function Note(props) {

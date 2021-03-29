@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { EditButton, BackButton, Input} from "./styledElements/CommonStyledElements";
-import {Wrapper,ModalLabel,BtnWrapper} from "./styledElements/EditStyledElements";
+import { EditButton, BackButton, Input } from "./styledElements/CommonStyledElements";
+import { Wrapper, ModalLabel, BtnWrapper } from "./styledElements/EditStyledElements";
 
 function EditNote(props) {
     const [title, setTitle] = useState(props.title);

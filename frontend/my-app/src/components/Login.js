@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Wrapper, Input, Label, AuthButton, Header, LoginButtonsWrapper } from "./styledElements/CommonStyledElements";
-import { emptyCredentialsAlert, baseUrl } from "./Todo";
+import { baseUrl } from "./Todo";
 import Axios from "axios";
 
 const WrapperLog = styled(Wrapper)`
@@ -18,8 +18,10 @@ async function loginUser() {
     const pass = document.getElementById("password");
     if (!validateInput(login.value, pass.value)) {
         cleanInputs(login, pass);
-        emptyCredentialsAlert();
-        return null;
+        return {
+            id: null,
+            text: "Login ani hasło nie mogą być puste ani nie mogą być dluższe niż 30 znaków"
+        }
     }
     try {
         const res = await Axios.post(`${baseUrl}/login`, {
@@ -27,22 +29,31 @@ async function loginUser() {
             password: pass.value,
         });
         if (res.data.error) {
-            console.log("something went wrong");
-            return null;
+            return {
+                id: null,
+                text: "Nie udało się zalogować"
+            };
         }
         if (res.data.message) {
-            console.log(res.data.message);
-            return null;
+            return {
+                id: null,
+                text: "Błędny login lub hasło"
+            };
         }
         cleanInputs(login, pass);
-        return (res.data[0].id);
+        return {
+            id: res.data[0].id,
+            text: "Zalogowano"
+        };
     } catch (err) {
-        console.log(err);
-        return null;
+        return {
+            id: null,
+            text: "Nie udało się zalogować"
+        };
     }
 }
 function validateInput(login, pass) {
-    if (login === "" || pass === "")
+    if (login === "" || pass === "" || login.length > 30 || pass.length > 30)
         return false;
     return true;
 }

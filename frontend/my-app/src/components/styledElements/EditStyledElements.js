@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Label } from "./CommonStyledElements";
+import { Label } from "./CommonStyledElements";
 export const Wrapper = styled.div`
     width:200px;
     height:400px;

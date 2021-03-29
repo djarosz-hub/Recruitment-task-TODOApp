@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Wrapper, Input, Label, AuthButton, Header, LoginButtonsWrapper, BackButton } from "./styledElements/CommonStyledElements";
-import { emptyCredentialsAlert, baseUrl } from "./Todo";
+import { baseUrl } from "./Todo";
 import Axios from "axios";
 
 const WrapperReg = styled(Wrapper)`
@@ -13,41 +13,37 @@ const WrapperReg = styled(Wrapper)`
     align-items:center;
 `;
 
-const registerUser = () => {
-    const login = document.getElementById("regLogin");
-    const pass = document.getElementById("regPass");
-    if (!validateInput(login.value, pass.value)) {
-        cleanInputs(login, pass);
-        return emptyCredentialsAlert();
-    }
-    try {
-        Axios.post(`${baseUrl}/register`, {
-            login: login.value,
-            password: pass.value,
-        }).then((res) => {
-            console.log(res);
-            if (res.data.error) {
-                return failedRegister(res.data.error);
-            }
-            successfullRegister();
+function registerUser(success, failure) {
+    return function () {
+        const login = document.getElementById("regLogin");
+        const pass = document.getElementById("regPass");
+        if (!validateInput(login.value, pass.value)) {
             cleanInputs(login, pass);
-        });
-    } catch (err) {
-        return failedRegister(err);
-    }
-};
+            return failure("Login ani hasło nie mogą być puste ani nie mogą być dluższe niż 30 znaków");
+        }
+        try {
+            Axios.post(`${baseUrl}/register`, {
+                login: login.value,
+                password: pass.value,
+            }).then((res) => {
+                if (res.status === 400) {
+                    return failure("Błąd rejestracji, nie zarejestrowano użytkownika");
+                }
+                if (res.status === 200 && res.data.error) {
+                    return failure("Podany użytkownik już istnieje");
+                }
+                cleanInputs(login, pass);
+                return success("Zarejestrowano użytkownika")
+            });
+        } catch (err) {
+            return failure("Błąd rejestracji, nie zarejestrowano użytkownika");
+        }
+    };
+}
 function validateInput(login, pass) {
     if (login === "" || pass === "" || login.length > 30 || pass.length > 30)
         return false;
     return true;
-}
-//todo
-function successfullRegister() {
-    alert("successfully registered user")
-}
-//todo
-function failedRegister(error) {
-    alert(`failed to register: ${error}`)
 }
 function cleanInputs(login, pass) {
     login.value = "";
@@ -64,7 +60,7 @@ function Register(props) {
                 <Input type="text" id="regPass" placeholder="hasło" maxLength="30"></Input>
             </form>
             <LoginButtonsWrapper>
-                <AuthButton onClick={registerUser}>Zarejestruj</AuthButton>
+                <AuthButton onClick={registerUser(props.succNot, props.failNot)}>Zarejestruj</AuthButton>
                 <BackButton onClick={props.hideRegisterForm}>Powrót</BackButton>
             </LoginButtonsWrapper>
         </WrapperReg>

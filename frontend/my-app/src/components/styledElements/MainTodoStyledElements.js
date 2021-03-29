@@ -5,7 +5,7 @@ import Modal from "react-modal";
 export const LogoutButton = styled(Button)`
     background-color:#b1200f;
     width:100px;
-    position: absolute;
+    position: fixed;
     top:10px;
     left:10px;
     color:#f5f5f5;
@@ -13,10 +13,9 @@ export const LogoutButton = styled(Button)`
     font-weight:600;
 `;
 export const Wrapper = styled.div`
-    background: linear-gradient(#0868ac,#084081);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     width:100%;
-    height:100vh;
+    height:100%;
     background-attachment:fixed;
 `;
 export const NotesContainer = styled.div`
@@ -56,6 +55,6 @@ export const StyledModal = styled(Modal)`
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 1.2rem;
-  z-index: 999;
+  z-index: 998;
 `;
 StyledModal.displayName = 'StyledModal';

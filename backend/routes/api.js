@@ -43,9 +43,7 @@ router.post("/login", (req, res) => {
           return;
         }
         if (result.length > 0) {
-          // res.send(result);
           return res.status(200).json(result);
-          // return;
         }
         return res
           .status(200)
@@ -60,7 +58,6 @@ router.post("/login", (req, res) => {
 //utils section
 router.get("/notes", (req, res) => {
   const login = req.query.login;
-  console.log(login)
   try {
     db.query("SELECT * FROM notes WHERE owner = ?", [login], (err, result) => {
       if (err) {
@@ -69,7 +66,6 @@ router.get("/notes", (req, res) => {
       if (result.length == 0) {
         return res.status(200).json({ message: "no notes yet" });
       }
-      console.log(result);
       res.send(result);
     });
   } catch (err) {
@@ -103,8 +99,6 @@ router.post("/notes", (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        //todo
-
         return res.status(201).json(result);
       }
     );
@@ -114,10 +108,6 @@ router.post("/notes", (req, res) => {
 });
 router.put("/notes/:id", async (req, res) => {
   const { login, id, title, body } = req.body;
-  console.log(login);
-  console.log(id);
-  console.log(title);
-  console.log(body);
   try {
     db.query(
       "UPDATE notes SET title = ?, body = ? WHERE id = ? AND owner = ?",
@@ -126,7 +116,6 @@ router.put("/notes/:id", async (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        console.log("note updated");
         return res.status(204).json(result);
       }
     );
@@ -144,7 +133,6 @@ router.delete("/notes/:id", (req, res) => {
         if (err) {
           return res.status(400).json({ error: err });
         }
-        console.log("note deleted");
         return res.status(204).json({ message: "successfully deleted" });
       }
     );

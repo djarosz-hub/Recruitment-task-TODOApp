@@ -3,19 +3,26 @@ import Register from "./Register";
 import Login from "./Login";
 import Note from "./Note";
 import NewNote from "./NewNote";
-import Modal from "react-modal";
 import EditNote from "./EditNote";
 import Axios from "axios";
-import { Wrapper, LogSectionWrapper, NotesSectionWrapper, LogoutButton, NotesContainer, H1 , StyledModal} from "./styledElements/MainTodoStyledElements";
-import { BackButton } from "./styledElements/CommonStyledElements";
+import { Wrapper, LogSectionWrapper, NotesSectionWrapper, LogoutButton, NotesContainer, H1, StyledModal } from "./styledElements/MainTodoStyledElements";
+import styled from "styled-components";
 
-export function emptyCredentialsAlert() {
-    alert("Username or password can't be empty!");
-}
-function emptyNoteAlert() {
-    alert("Note title or note body can't be empty!");
-}
 export const baseUrl = "http://localhost:3001";
+
+const NotifyContainer = styled.div`
+    background-color:${props => props.col};
+    color:white;
+    padding:16px;
+    position:absolute;
+    top: ${props => props.top}px;
+    right:20px;
+    border-radius:10px;
+    z-index:999;
+    box-shadow: 0px 5px 5px #00000066;
+    text-shadow:2px 2px 2px black;
+    transition:top 0.5s ease;
+`;
 
 class Todo extends React.Component {
     constructor(props) {
@@ -25,7 +32,10 @@ class Todo extends React.Component {
             notes: [],
             showEditModal: false,
             editNote: {},
-            showRegister: false
+            showRegister: false,
+            notifyColor: "",
+            notifyTopPos: -100,
+            notifyText: ""
         };
     }
 
@@ -39,24 +49,25 @@ class Todo extends React.Component {
                 },
             })
                 .then((res) => {
-                    if (res.status === 204) console.log("successfully deleted note");
+                    if (res.status === 204) {
+                        this.setState({ notes });
+                        this.successNotification('Usunięto notatkę')
+                    }
                 })
                 .catch((error) => {
-                    console.log(error);
+                    this.failureNotification('Błąd, nie usunięto notatki :(');
                 });
         } catch (error) {
-            console.log(`error deleting data: ${error}`);
+            this.failureNotification('Błąd, nie usunięto notatki :(');
         }
 
-        this.setState({ notes });
     };
     async addNote(note) {
         if (note.title === "" || note.body === "") {
-            return emptyNoteAlert();
+            return this.failureNotification("Notatka musi zawierać tytuł i opis!");
         }
         if (note.title.length > 100 || note.body.length > 2000) {
-            //todo
-            return emptyNoteAlert();
+            return this.failureNotification("Tytuł notatki nie może być dłuższy niż 100 znaków a treść dłuższa niż 2000 znaków!");
         }
         const notes = [...this.state.notes];
         try {
@@ -66,23 +77,23 @@ class Todo extends React.Component {
                 owner: this.state.loggedId,
             });
             if (res.data.error) {
-                return console.log(`error adding note: ${res.data.error}`)
+                return this.failureNotification("Nie udało się dodać notatki :(");
             }
             const newNoteId = res.data.insertId;
             notes.push({ id: newNoteId, title: note.title, body: note.body });
             this.setState({ notes });
+            this.successNotification("Notatka dodana");
         }
         catch (error) {
-            console.log(`error adding note: ${error}`);
+            return this.failureNotification("Nie udało się dodać notatki :(");
         }
     }
     editNote(note) {
         if (note.title === "" || note.body === "") {
-            return emptyNoteAlert();
+            return this.failureNotification("Notatka musi zawierać tytuł i opis!");
         }
         if (note.title.length > 100 || note.body.length > 2000) {
-            //todo
-            return emptyNoteAlert();
+            return this.failureNotification("Tytuł notatki nie może być dłuższy niż 100 znaków a treść dłuższa niż 2000 znaków!");
         }
         try {
             Axios.put(`${baseUrl}/notes/${note.id}`, {
@@ -92,7 +103,7 @@ class Todo extends React.Component {
                 body: note.body,
             }).then((res) => {
                 if (res.status === 204) {
-                    console.log("successfully updated note");
+                    this.successNotification("Notatka zaktualizowana");
                     const notes = [...this.state.notes];
                     const index = notes.findIndex(item => item.id === note.id);
                     if (index >= 0) {
@@ -101,10 +112,10 @@ class Todo extends React.Component {
                     }
                 }
             }).catch((error) => {
-                console.log(error);
+                return this.failureNotification("Nie udało się zaktualizować notatki :(");
             })
         } catch (error) {
-            console.log(`error updating data: ${error}`);
+            return this.failureNotification("Nie udało się zaktualizować notatki :(");
         }
         this.toggleModal();
     }
@@ -121,31 +132,32 @@ class Todo extends React.Component {
                 login: this.state.loggedId,
             },
         }).then((res) => {
-            if (res.message) {
-                console.log(res.message.data);
-                return;
+            if (res.status === 400) {
+                return this.failureNotification("Nie udało się pobrać notatek");
             }
             if (res.data.message) {
-                console.log(res.data.message)
-                return;
+                return this.successNotification("Brak notatek do pobrania");
             }
             this.setState({ notes: res.data })
         });
     };
     async onLogin(res) {
-        (res).then((id) => {
+        (res).then((returnedVal) => {
             this.setState({ notes: [] })
-            if (id == null) {
-                return
+            if (returnedVal.id == null) {
+                return this.failureNotification(returnedVal.text);
             }
-            this.setState({ loggedId: id });
+            this.setState({ loggedId: returnedVal.id });
             this.getNotesFromApi();
+            this.successNotification(returnedVal.text);
         })
     }
     logoutUser = () => {
         this.setState({
             loggedId: null,
             notes: [],
+        }, () => {
+            this.successNotification("Wylogowano");
         })
     }
     toggleRegisterForm = () => {
@@ -153,18 +165,53 @@ class Todo extends React.Component {
             showRegister: !this.state.showRegister
         })
     }
+    showNotification = () => {
+        this.setState({
+            notifyTopPos: 20,
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    notifyTopPos: -100,
+                })
+            }, 2000);
+        })
+    };
+    failureNotification = (text) => {
+        this.setState({
+            notifyColor: "#b1200f",
+            notifyText: text
+        }, () => {
+            this.showNotification();
+        })
+    };
+    successNotification = (text) => {
+        this.setState({
+            notifyColor: "#77e053",
+            notifyText: text
+        }, () => {
+            this.showNotification();
+        })
+    };
     render() {
         return (
             <Wrapper>
+                <NotifyContainer
+                    top={this.state.notifyTopPos}
+                    col={this.state.notifyColor}
+                >
+                    {this.state.notifyText}
+                </NotifyContainer>
                 {this.state.loggedId == null &&
                     <LogSectionWrapper>
-                        {!this.state.showRegister &&<Login 
-                        setLoggedId={(id) => this.onLogin(id)}
-                        showRegisterForm={() => this.toggleRegisterForm()}>
+                        {!this.state.showRegister && <Login
+                            setLoggedId={(id) => this.onLogin(id)}
+                            showRegisterForm={() => this.toggleRegisterForm()}>
                         </Login>}
                         {this.state.showRegister &&
                             <Register
-                            hideRegisterForm={() =>this.toggleRegisterForm()}
+                                hideRegisterForm={() => this.toggleRegisterForm()}
+                                succNot={(text) => this.successNotification(text)}
+                                failNot={(text) => this.failureNotification(text)}
                             />}
                     </LogSectionWrapper>}
                 {this.state.loggedId != null &&
@@ -177,14 +224,13 @@ class Todo extends React.Component {
                             isOpen={this.state.showEditModal}
                             contentLabel="Edytuj notatkę"
                             ariaHideApp={false}
-                            >
+                        >
                             <EditNote onEdit={(note) => this.editNote(note)}
                                 title={this.state.editNote.title}
                                 body={this.state.editNote.body}
                                 id={this.state.editNote.id}
-                                hideModal={()=>this.toggleModal()}
+                                hideModal={() => this.toggleModal()}
                             />
-                            {/* <BackButton onClick={() => this.toggleModal()}>Anuluj</BackButton> */}
                         </StyledModal>
                         <NotesContainer>
                             {this.state.notes.map((note) => (
