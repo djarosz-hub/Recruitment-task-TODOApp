@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import {Label, Input} from "./NewNote";
+// import {Label, Input} from "./NewNote";
 import styled from "styled-components";
 import {EditButton} from "./styledElements/CommonStyledElements";
+import {Input, Label}from "./styledElements/CommonStyledElements";
 
 const Wrapper = styled.div`
     width:200px;

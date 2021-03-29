@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
     min-width:250px;
     display:inline-block;
     flex-direction:column;
-    background-color: #808080;
+    background-color: #9d9ea3 ;
     color:whitesmoke;
     text-shadow:2px 2px 2px black;
     box-shadow: 0px 0px 7px black;;
@@ -28,10 +28,11 @@ export const Title = styled.p`
     text-align: center;
     font-size: 20px;
     margin:5px 0px 5px 0px;
-    padding:5px;
+    padding:8px;
     border-bottom: solid black 1px;
     box-shadow: 0px 5px 5px #00000066;
     word-break: break-all;
+    
 `;
 export const BtnWrapper = styled.div`
     width:100%;

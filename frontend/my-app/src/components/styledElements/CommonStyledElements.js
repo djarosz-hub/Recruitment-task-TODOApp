@@ -1,32 +1,34 @@
 import styled from "styled-components";
 export const Wrapper = styled.div`
-    border-radius: 5px;
+    border-radius: 10px;
     padding:20px;
-    border: 1px solid #FFC300;
+    border: 1px solid #084081;
     display:flex;
 `;
 export const Button = styled.button`
     width:fit-content;
-    height:35px;
+    height:40px;
     color:white;
-    border-radius:5px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-style: italic;
-    font-weight:550;
+    border-radius:20px;
+    border: 1px solid #000000;
+    font-weight:500;
+    font-size:15px;
+    text-shadow:2px 2px 2px black;
 `;
 export const EditButton = styled(Button)`
-    background-color:blue;
+    background-color:#4575b4;
 `;
 
 export const DeleteButton = styled(Button)`
-    background-color:red;
+    background-color:#d73027;
 `;
 
 export const AddButton = styled(Button)`
-    background-color:greenyellow;
+    background-color:#447733;
 `;
-export const RegButton = styled(Button)`
+export const AuthButton = styled(Button)`
     background-color:purple;
+    width:100px;
 `;
 export const Input = styled.input`
     padding: 5px 5px;
@@ -34,8 +36,10 @@ export const Input = styled.input`
 `;
 export const Header = styled.p`
     font-size:30px;
-    color:gray;
+    color:whitesmoke;
+    margin:5px;
 `;
 export const Label = styled.label`
     display:block;
+    color:whitesmoke;
 `;

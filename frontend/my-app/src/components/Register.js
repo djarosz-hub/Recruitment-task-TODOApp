@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Wrapper, Input, Label, RegButton, Header } from "./styledElements/CommonStyledElements";
+import { Wrapper, Input, Label, AuthButton, Header } from "./styledElements/CommonStyledElements";
 import { emptyCredentialsAlert, baseUrl } from "./Todo";
 import Axios from "axios";
 
 const WrapperReg = styled(Wrapper)`
+    background: linear-gradient(#084081,#2b8cbe,#2b8cbe);
     width:300px;
     height:200px;
     flex-direction:column;
@@ -61,7 +62,7 @@ function Register() {
                 <Label>Hasło:</Label>
                 <Input type="text" id="regPass" placeholder="hasło" maxLength="30"></Input>
             </form>
-            <RegButton onClick={registerUser}>Zarejestruj</RegButton>
+            <AuthButton onClick={registerUser}>Zarejestruj</AuthButton>
         </WrapperReg>
     );
 }

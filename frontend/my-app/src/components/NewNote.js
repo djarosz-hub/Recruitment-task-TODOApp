@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {Button, AddButton}from "./styledElements/CommonStyledElements";
+import {Button, AddButton, Input, Label, Wrapper}from "./styledElements/CommonStyledElements";
 
-export const Wrapper = styled.div``;
-export const Label = styled.label``;
-export const Input = styled.input``;
+const WrapperNewNote = styled(Wrapper)`
+    background: linear-gradient(#2b8cbe,#084081);
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+`;
+const InputNote = styled(Input)`
+    width:500px;
+`;
+
 export const ShowFormBtn = styled(Button)`
-    background-color:green;
+    background-color:#447733;
 `;
 function NewNote(props) {
 
@@ -34,14 +41,14 @@ function NewNote(props) {
   };
   return (
       showAddForm ? (
-    <Wrapper>
+    <WrapperNewNote>
       <Label>Tytuł notatki:</Label>
-      <Input type="text" value={title} onChange={changeTitleHandler} maxLength="100"/>
+      <InputNote type="text" value={title} onChange={changeTitleHandler} maxLength="100"/>
 
       <Label>Treść:</Label>
-      <Input type="text" value={body} onChange={changeBodyHandler} maxLength="2000"/>
+      <InputNote type="text" value={body} onChange={changeBodyHandler} maxLength="2000"/>
       <AddButton onClick={() => addNote()}>Dodaj notatkę</AddButton>
-    </Wrapper>
+    </WrapperNewNote>
       ) : (
         <ShowFormBtn onClick={()=>setShowAddForm(true)}>Dodaj notatkę</ShowFormBtn>
       )

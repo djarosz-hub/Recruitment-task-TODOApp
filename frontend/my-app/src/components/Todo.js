@@ -6,7 +6,7 @@ import NewNote from "./NewNote";
 import Modal from "react-modal";
 import EditNote from "./EditNote";
 import Axios from "axios";
-import {Wrapper,LogoutButton} from "./styledElements/MainTodoStyledElements";
+import { Wrapper, LogSectionWrapper, NotesSectionWrapper, LogoutButton, NotesContainer, H1 } from "./styledElements/MainTodoStyledElements";
 
 export function emptyCredentialsAlert() {
     alert("Username or password can't be empty!");
@@ -17,12 +17,15 @@ function emptyNoteAlert() {
 export const baseUrl = "http://localhost:3001";
 
 class Todo extends React.Component {
-    state = {
-        loggedId: null,
-        notes: [],
-        showEditModal: false,
-        editNote: {}
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedId: null,
+            notes: [],
+            showEditModal: false,
+            editNote: {},
+        };
+    }
 
     deleteNote(id) {
         const notes = [...this.state.notes].filter(note => note.id !== id);
@@ -135,34 +138,40 @@ class Todo extends React.Component {
     render() {
         return (
             <Wrapper>
-                <Login setLoggedId={(id) => this.onLogin(id)}>
-
-                </Login>
-                <LogoutButton onClick={this.logoutUser}>Wyloguj</LogoutButton>
-                <Register />
-                <NewNote
-                    onAdd={(note) => this.addNote(note)} />
-                <Modal
-                    isOpen={this.state.showEditModal}
-                    contentLabel="Edytuj notatkę"
-                    ariaHideApp={false}>
-                    <EditNote onEdit={(note) => this.editNote(note)}
-                        title={this.state.editNote.title}
-                        body={this.state.editNote.body}
-                        id={this.state.editNote.id}
-                    />
-                    <button onClick={() => this.toggleModal()}>Anuluj</button>
-                </Modal>
-                <div>
-                    {this.state.notes.map((note) => (
-                        <Note key={note.id}
-                            title={note.title}
-                            body={note.body}
-                            id={note.id}
-                            onDelete={(id) => this.deleteNote(id)}
-                            onEdit={(note) => this.editNoteHandler(note)} />
-                    ))}
-                </div>
+                {this.state.loggedId == null &&
+                <LogSectionWrapper>
+                    <Login setLoggedId={(id) => this.onLogin(id)}>
+                    </Login>
+                    <Register />
+                </LogSectionWrapper>}
+                {this.state.loggedId != null &&
+                <NotesSectionWrapper>
+                    <LogoutButton onClick={this.logoutUser}>Wyloguj</LogoutButton>
+                    <NewNote
+                        onAdd={(note) => this.addNote(note)} />
+                    <H1>Twoje notatki:</H1>
+                    <Modal
+                        isOpen={this.state.showEditModal}
+                        contentLabel="Edytuj notatkę"
+                        ariaHideApp={false}>
+                        <EditNote onEdit={(note) => this.editNote(note)}
+                            title={this.state.editNote.title}
+                            body={this.state.editNote.body}
+                            id={this.state.editNote.id}
+                        />
+                        <button onClick={() => this.toggleModal()}>Anuluj</button>
+                    </Modal>
+                    <NotesContainer>
+                        {this.state.notes.map((note) => (
+                            <Note key={note.id}
+                                title={note.title}
+                                body={note.body}
+                                id={note.id}
+                                onDelete={(id) => this.deleteNote(id)}
+                                onEdit={(note) => this.editNoteHandler(note)} />
+                        ))}
+                    </NotesContainer>
+                </NotesSectionWrapper>}
             </Wrapper>
         );
     }

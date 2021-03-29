@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Wrapper, Input, Label, RegButton, Header } from "./styledElements/CommonStyledElements";
+import { Wrapper, Input, Label, AuthButton, Header } from "./styledElements/CommonStyledElements";
 import { emptyCredentialsAlert, baseUrl } from "./Todo";
 import Axios from "axios";
 
 const WrapperLog = styled(Wrapper)`
+    background: linear-gradient(#084081,#2b8cbe,#2b8cbe);
     width:300px;
     height:200px;
     flex-direction:column;
@@ -15,8 +16,8 @@ const WrapperLog = styled(Wrapper)`
 async function loginUser() {
     const login = document.getElementById("login");
     const pass = document.getElementById("password");
-    if (!validateInput(login.value,pass.value)) {
-        cleanInputs(login,pass);
+    if (!validateInput(login.value, pass.value)) {
+        cleanInputs(login, pass);
         emptyCredentialsAlert();
         return null;
     }
@@ -35,7 +36,7 @@ async function loginUser() {
             console.log(res.data.message);
             return null;
         }
-        cleanInputs(login,pass);
+        cleanInputs(login, pass);
         return (res.data[0].id);
     } catch (err) {
         console.log(err);
@@ -49,7 +50,7 @@ function validateInput() {
         return false;
     return true;
 }
-function cleanInputs(login,pass) {
+function cleanInputs(login, pass) {
     login.value = "";
     pass.value = "";
 }
@@ -63,7 +64,7 @@ function Login(props) {
                 <Label>Hasło:</Label>
                 <Input type="text" id="password" placeholder="hasło" maxLength="30"></Input>
             </form>
-            <RegButton onClick={() => props.setLoggedId(loginUser())}>Zaloguj</RegButton>
+            <AuthButton onClick={() => props.setLoggedId(loginUser())}>Zaloguj</AuthButton>
         </WrapperLog>
     );
 }
