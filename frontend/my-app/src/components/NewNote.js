@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {Button, AddButton, Input, Label, Wrapper}from "./styledElements/CommonStyledElements";
+import {Button, AddButton, Input, Label, Wrapper, BackButton}from "./styledElements/CommonStyledElements";
 
 const WrapperNewNote = styled(Wrapper)`
     background: linear-gradient(#2b8cbe,#084081);
@@ -48,6 +48,7 @@ function NewNote(props) {
       <Label>Treść:</Label>
       <InputNote type="text" value={body} onChange={changeBodyHandler} maxLength="2000"/>
       <AddButton onClick={() => addNote()}>Dodaj notatkę</AddButton>
+      <BackButton onClick={()=>setShowAddForm(false)}>Schowaj</BackButton>
     </WrapperNewNote>
       ) : (
         <ShowFormBtn onClick={()=>setShowAddForm(true)}>Dodaj notatkę</ShowFormBtn>

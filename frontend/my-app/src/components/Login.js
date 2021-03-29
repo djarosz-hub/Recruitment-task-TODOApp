@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { Wrapper, Input, Label, AuthButton, Header } from "./styledElements/CommonStyledElements";
+import { Wrapper, Input, Label, AuthButton, Header, LoginButtonsWrapper } from "./styledElements/CommonStyledElements";
 import { emptyCredentialsAlert, baseUrl } from "./Todo";
 import Axios from "axios";
 
 const WrapperLog = styled(Wrapper)`
     background: linear-gradient(#084081,#2b8cbe,#2b8cbe);
     width:300px;
-    height:200px;
+    height:250px;
     flex-direction:column;
     justify-content:center;
     align-items:center;
@@ -26,8 +26,6 @@ async function loginUser() {
             login: login.value,
             password: pass.value,
         });
-        login.value = "";
-        pass.value = "";
         if (res.data.error) {
             console.log("something went wrong");
             return null;
@@ -43,9 +41,7 @@ async function loginUser() {
         return null;
     }
 }
-function validateInput() {
-    const login = document.getElementById("login").value;
-    const pass = document.getElementById("password").value;
+function validateInput(login, pass) {
     if (login === "" || pass === "")
         return false;
     return true;
@@ -64,7 +60,10 @@ function Login(props) {
                 <Label>Hasło:</Label>
                 <Input type="text" id="password" placeholder="hasło" maxLength="30"></Input>
             </form>
-            <AuthButton onClick={() => props.setLoggedId(loginUser())}>Zaloguj</AuthButton>
+            <LoginButtonsWrapper>
+                <AuthButton onClick={() => props.setLoggedId(loginUser())}>Zaloguj</AuthButton>
+                <AuthButton onClick={() => props.showRegisterForm()}>Rejestracja</AuthButton>
+            </LoginButtonsWrapper>
         </WrapperLog>
     );
 }

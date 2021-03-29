@@ -6,7 +6,8 @@ import NewNote from "./NewNote";
 import Modal from "react-modal";
 import EditNote from "./EditNote";
 import Axios from "axios";
-import { Wrapper, LogSectionWrapper, NotesSectionWrapper, LogoutButton, NotesContainer, H1 } from "./styledElements/MainTodoStyledElements";
+import { Wrapper, LogSectionWrapper, NotesSectionWrapper, LogoutButton, NotesContainer, H1 , StyledModal} from "./styledElements/MainTodoStyledElements";
+import { BackButton } from "./styledElements/CommonStyledElements";
 
 export function emptyCredentialsAlert() {
     alert("Username or password can't be empty!");
@@ -24,6 +25,7 @@ class Todo extends React.Component {
             notes: [],
             showEditModal: false,
             editNote: {},
+            showRegister: false
         };
     }
 
@@ -52,6 +54,10 @@ class Todo extends React.Component {
         if (note.title === "" || note.body === "") {
             return emptyNoteAlert();
         }
+        if (note.title.length > 100 || note.body.length > 2000) {
+            //todo
+            return emptyNoteAlert();
+        }
         const notes = [...this.state.notes];
         try {
             const res = await Axios.post(`${baseUrl}/notes`, {
@@ -71,6 +77,13 @@ class Todo extends React.Component {
         }
     }
     editNote(note) {
+        if (note.title === "" || note.body === "") {
+            return emptyNoteAlert();
+        }
+        if (note.title.length > 100 || note.body.length > 2000) {
+            //todo
+            return emptyNoteAlert();
+        }
         try {
             Axios.put(`${baseUrl}/notes/${note.id}`, {
                 login: this.state.loggedId,
@@ -135,43 +148,55 @@ class Todo extends React.Component {
             notes: [],
         })
     }
+    toggleRegisterForm = () => {
+        this.setState({
+            showRegister: !this.state.showRegister
+        })
+    }
     render() {
         return (
             <Wrapper>
                 {this.state.loggedId == null &&
-                <LogSectionWrapper>
-                    <Login setLoggedId={(id) => this.onLogin(id)}>
-                    </Login>
-                    <Register />
-                </LogSectionWrapper>}
+                    <LogSectionWrapper>
+                        {!this.state.showRegister &&<Login 
+                        setLoggedId={(id) => this.onLogin(id)}
+                        showRegisterForm={() => this.toggleRegisterForm()}>
+                        </Login>}
+                        {this.state.showRegister &&
+                            <Register
+                            hideRegisterForm={() =>this.toggleRegisterForm()}
+                            />}
+                    </LogSectionWrapper>}
                 {this.state.loggedId != null &&
-                <NotesSectionWrapper>
-                    <LogoutButton onClick={this.logoutUser}>Wyloguj</LogoutButton>
-                    <NewNote
-                        onAdd={(note) => this.addNote(note)} />
-                    <H1>Twoje notatki:</H1>
-                    <Modal
-                        isOpen={this.state.showEditModal}
-                        contentLabel="Edytuj notatkę"
-                        ariaHideApp={false}>
-                        <EditNote onEdit={(note) => this.editNote(note)}
-                            title={this.state.editNote.title}
-                            body={this.state.editNote.body}
-                            id={this.state.editNote.id}
-                        />
-                        <button onClick={() => this.toggleModal()}>Anuluj</button>
-                    </Modal>
-                    <NotesContainer>
-                        {this.state.notes.map((note) => (
-                            <Note key={note.id}
-                                title={note.title}
-                                body={note.body}
-                                id={note.id}
-                                onDelete={(id) => this.deleteNote(id)}
-                                onEdit={(note) => this.editNoteHandler(note)} />
-                        ))}
-                    </NotesContainer>
-                </NotesSectionWrapper>}
+                    <NotesSectionWrapper>
+                        <LogoutButton onClick={this.logoutUser}>Wyloguj</LogoutButton>
+                        <NewNote
+                            onAdd={(note) => this.addNote(note)} />
+                        <H1>Twoje notatki:</H1>
+                        <StyledModal
+                            isOpen={this.state.showEditModal}
+                            contentLabel="Edytuj notatkę"
+                            ariaHideApp={false}
+                            >
+                            <EditNote onEdit={(note) => this.editNote(note)}
+                                title={this.state.editNote.title}
+                                body={this.state.editNote.body}
+                                id={this.state.editNote.id}
+                                hideModal={()=>this.toggleModal()}
+                            />
+                            {/* <BackButton onClick={() => this.toggleModal()}>Anuluj</BackButton> */}
+                        </StyledModal>
+                        <NotesContainer>
+                            {this.state.notes.map((note) => (
+                                <Note key={note.id}
+                                    title={note.title}
+                                    body={note.body}
+                                    id={note.id}
+                                    onDelete={(id) => this.deleteNote(id)}
+                                    onEdit={(note) => this.editNoteHandler(note)} />
+                            ))}
+                        </NotesContainer>
+                    </NotesSectionWrapper>}
             </Wrapper>
         );
     }

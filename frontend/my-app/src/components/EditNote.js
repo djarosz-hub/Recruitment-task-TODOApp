@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-// import {Label, Input} from "./NewNote";
-import styled from "styled-components";
-import {EditButton} from "./styledElements/CommonStyledElements";
-import {Input, Label}from "./styledElements/CommonStyledElements";
-
-const Wrapper = styled.div`
-    width:200px;
-    height:200px;
-`;
+import { EditButton, BackButton, Input} from "./styledElements/CommonStyledElements";
+import {Wrapper,ModalLabel,BtnWrapper} from "./styledElements/EditStyledElements";
 
 function EditNote(props) {
     const [title, setTitle] = useState(props.title);
@@ -23,23 +16,24 @@ function EditNote(props) {
     };
     const editNote = () => {
         const note = {
-            title:title,
-            body:body,
-            id:props.id
+            title: title,
+            body: body,
+            id: props.id
         }
         props.onEdit(note);
     }
     return (
-
         <Wrapper>
-            <Label>Tytuł notatki:</Label>
+            <ModalLabel>Tytuł notatki:</ModalLabel>
             <Input type="text" value={title} onChange={changeTitleHandler} maxLength="100" />
 
-            <Label>Treść:</Label>
+            <ModalLabel>Treść:</ModalLabel>
             <Input type="text" value={body} onChange={changeBodyHandler} maxLength="2000" />
-            <EditButton onClick={() => editNote()}>Edytuj notatkę</EditButton>
+            <BtnWrapper>
+                <EditButton onClick={() => editNote()}>Edytuj notatkę</EditButton>
+                <BackButton onClick={() => props.hideModal()}>Anuluj</BackButton>
+            </BtnWrapper>
         </Wrapper>
-
     );
 }
 export default EditNote;

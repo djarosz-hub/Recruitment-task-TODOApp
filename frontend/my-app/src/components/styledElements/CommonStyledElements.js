@@ -29,6 +29,7 @@ export const AddButton = styled(Button)`
 export const AuthButton = styled(Button)`
     background-color:purple;
     width:100px;
+    margin:5px;
 `;
 export const Input = styled.input`
     padding: 5px 5px;
@@ -42,4 +43,11 @@ export const Header = styled.p`
 export const Label = styled.label`
     display:block;
     color:whitesmoke;
+`;
+export const LoginButtonsWrapper = styled.div`
+    display:flex;
+    flex-direction:column;
+`;
+export const BackButton = styled(AuthButton)`
+background-color:#b1200f;
 `;
